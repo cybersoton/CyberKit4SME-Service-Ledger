@@ -1,0 +1,108 @@
+networks:
+  sandbox_default:
+    name: sandbox_default
+    external: true
+
+services:
+
+  sl-ipfs:
+    image: ipfs/go-ipfs:release
+    container_name: sl-ipfs
+    restart: unless-stopped
+    ports:
+      - 8085:8080
+      #- 4001:4001
+      - 5001:5001
+    volumes:
+      - ./storage/ipfs:/data/ipfs/
+    networks:
+      - sandbox_default
+
+  sl-postgres:
+    image: postgres:latest
+    container_name: sl-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./storage/postgres:/var/lib/postgresql/data
+    #healthcheck:
+      #test: ["CMD-SHELL", "pg_isready -U postgres"]
+      #interval: 5s
+      #timeout: 5s
+      #retries: 5
+    networks:
+      - sandbox_default
+
+  sl-vault:
+    image: vault:latest
+    container_name: sl-vault
+    restart: unless-stopped
+    ports:
+      - 8223:8223
+    volumes:
+      - ./storage/vault/config:/vault/config
+      - ./storage/vault/file:/vault/file
+    cap_add:
+      - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/vault-config.json
+    networks:
+      - sandbox_default
+
+  sl-redis:
+    image: redis/redis-stack:latest
+    container_name: sl-redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    networks:
+      - sandbox_default
+      
+  sl-servers:
+    image: uoscyber/service-ledger:6.5
+    container_name: sl-servers
+    env_file: .env
+    depends_on:
+      #sl-postgres:
+        #condition: service_healthy
+      - sl-postgres
+      - sl-redis
+      - sl-vault
+      - sl-ipfs
+    ports:
+      - 6011:6011
+      - 6012:6012
+    networks:
+      - sandbox_default
+      
+  sl-proxy:
+    image: nginx:latest
+    container_name: sl-proxy
+    restart: unless-stopped
+    depends_on:
+      - sl-servers
+    ports:
+      - 6023:6023
+    volumes:
+      - ./storage/nginx/html:/usr/share/nginx/html
+      - ./storage/nginx/config/nginx.conf:/etc/nginx/nginx.conf
+      - ./storage/nginx/config/default.conf:/etc/nginx/conf.d/default.conf
+      - ./storage/nginx/ssl/sl.crt:/etc/ssl/certs/sl.crt
+      - ./storage/nginx/ssl/sl.key:/etc/ssl/private/sl.key
+    networks:
+      - sandbox_default
+      
+  sl-web-app:
+    image: uoscyber/service-ledger-ui:1.0
+    container_name: sl-web-app
+    restart: unless-stopped
+    depends_on:
+      - sl-proxy
+    ports:
+      - 6022:6022
+    networks:
+      - sandbox_default
