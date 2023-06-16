@@ -9,8 +9,6 @@ To deal with CTI data, SL integrates the [STIX and TAXII standards](https://oasi
 Software requirements:
 
 - Docker and Docker Compose
-- NodeJS 18
-- npm
 
 ### Step 1: Setting up the Algorand network
 
