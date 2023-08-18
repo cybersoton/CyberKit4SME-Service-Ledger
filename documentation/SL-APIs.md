@@ -8,14 +8,16 @@ A company in SL can be represented by creating a group `organisation`. In SL, th
 
 The _Authentication Server_ of SL, listening on port 6023, exposes the following APIs:
 
-| URL | Methods | Authentication | Authorised Roles for POST |
+| URL | Methods | Authentication | Authorised Roles |
 | - | - | - | - |
 | /v1/signup/admin | POST | no | none |
 | /v1/signup/**{organisation}**/user | POST | yes | `admin` |
-| /v1/**{organisation}**/admin/algo_account | GET | yes | `admin` |
 | /v1/login | POST | yes | none |
+| /v1/**{organisation}**/algo_account | GET | yes | `admin` |
+| /v1/**{organisation}**/users | GET | yes | `admin` |
+| /v1/**{organisation}**/users/**{username}** | DELETE | yes | `admin` |
 
-The "none" value means that no specific role is required to POST on the requested endpoint. In the 1st URL this means, since there is no authentication, that anyone can register an organisation (and its admin) into SL. The authentication performed by the other URLs are different. The 2nd and 3rd URLs authenticate via _Bearer Token_, whereas the 4th one via username/password.
+The "none" value in "Authorised Roles" means that no specific role is required to POST on the requested endpoint. In the 1st URL this means, since there is no authentication, that anyone can register an organisation (and its admin) into SL. The authentication performed by the other URLs are different. The 3rd URL authenticates via username/password, whereas the other URLs authenticate via _Bearer Token_.
 
 ## Registering an organisation and its admin
 
@@ -162,6 +164,57 @@ This API registers a user `hospital_user1` in the `ORG_NAME` organisation, i.e. 
   }
 }
 
+```
+
+## Retrieving the users of an organisation
+
+```bash
+curl -sk --request GET \
+	--header "Accept: application/json" \
+	--header "Authorization: Bearer ${ADMIN_TOKEN}" \
+	https://localhost:6023/v1/${ORG_NAME}/users | jq -r "."
+```
+
+This API allows an admin to retrieve the users of its `ORG_NAME` organisation. Note that this API includes a Bearer token `ADMIN_TOKEN` for authentication, i.e. a token obtained from a login API in the field `sl_token`.
+
+### Sample response
+
+```json
+{
+  "users": [
+    "hospital_admin",
+    "hospital_user3",
+    "hospital_user2",
+    "hospital_user1"
+  ]
+}
+```
+
+## Deleting a user from an organisation
+
+```bash
+curl -sk --request DELETE \
+	--header "Accept: application/json" \
+	--header "Authorization: Bearer ${ADMIN_TOKEN}" \
+	https://localhost:6023/v1/${ORG_NAME}/users/${USER_NAME} | jq -r "."
+```
+
+This API allows an admin to remove a user from its `ORG_NAME` organisation. Note that this API includes a Bearer token `ADMIN_TOKEN` for authentication, i.e. a token obtained from a login API in the field `sl_token`.
+
+### Sample response
+
+```json
+{
+  "organisation": {
+    "name": "hospital",
+    "authentication": {
+      "message": "UserPass authentication revoked for user hospital_user2"
+    },
+    "entity": {
+      "message": "Entity hospital_user2 deleted successfully"
+    }
+  }
+}
 ```
 
 # TAXII Server

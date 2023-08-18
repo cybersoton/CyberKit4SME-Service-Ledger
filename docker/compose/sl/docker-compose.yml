@@ -63,7 +63,7 @@ services:
       - sandbox_default
       
   sl-servers:
-    image: uoscyber/service-ledger:6.5
+    image: uoscyber/service-ledger:6.7
     container_name: sl-servers
     env_file: .env
     depends_on:
@@ -79,12 +79,24 @@ services:
     networks:
       - sandbox_default
       
+  sl-web-app:
+    image: uoscyber/service-ledger-ui:2.0
+    container_name: sl-web-app
+    restart: unless-stopped
+    depends_on:
+      - sl-servers
+    ports:
+      - 6013:6013
+    networks:
+      - sandbox_default
+  
   sl-proxy:
     image: nginx:latest
     container_name: sl-proxy
     restart: unless-stopped
     depends_on:
       - sl-servers
+      - sl-web-app
     ports:
       - 6023:6023
     volumes:
@@ -95,14 +107,4 @@ services:
       - ./storage/nginx/ssl/sl.key:/etc/ssl/private/sl.key
     networks:
       - sandbox_default
-      
-  sl-web-app:
-    image: uoscyber/service-ledger-ui:1.0
-    container_name: sl-web-app
-    restart: unless-stopped
-    depends_on:
-      - sl-proxy
-    ports:
-      - 6022:6022
-    networks:
-      - sandbox_default
+
