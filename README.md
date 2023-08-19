@@ -53,7 +53,7 @@ To bring the SL's servers listening and ready to receive API requests, run the f
 
 ## SL usage
 
-With Service Ledger, you have the flexibility to use it either via **web app** by connecting to `https://${HOSTNAME}:6022`, or via **API calls** to be transmitted to the endpoint `https://${HOSTNAME}:6023`.
+With Service Ledger, you have the flexibility to use it either via **web app** by connecting to `https://${HOSTNAME}:6023/service-ledger`, or via **API calls** to be transmitted to the endpoint `https://${HOSTNAME}:6023`.
 
 The web app makes it easy to register an organisation and its members in SL. Once a member authenticates in the web app, she/he can easily store CTI data by uploading a STIX object (in json format) or by copying-and-pasting its content on the dedicated web page. A member can inspect all the organisation’s STIX objects and, if authorised, those belonging to other organisations. Additionally, the web app offers a user-friendly way to filter the STIX objects with a drop-down list of parameters to be selected.
 
