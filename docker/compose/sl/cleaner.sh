@@ -6,5 +6,5 @@ rm -rf storage/postgres/
 rm -rf storage/ipfs/
 rm -rf storage/vault/file/
 
-docker image rm uoscyber/service-ledger:6.7
-docker image rm uoscyber/service-ledger-ui:2.0
+#docker image rm uoscyber/service-ledger:6.7
+#docker image rm uoscyber/service-ledger-ui:2.0

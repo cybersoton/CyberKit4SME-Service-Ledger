@@ -113,7 +113,7 @@ This API allows an organisation's entity to login in SL, e.g., the admin `hospit
 ```bash
 curl -sk --request GET \
 	--header "Authorization: Bearer ${ADMIN_TOKEN}" \
-	https://localhost:6023/v1/${ORG_NAME}/admin/algo_account | jq -r "."
+	https://localhost:6023/v1/${ORG_NAME}/algo_account | jq -r "."
 ```
 
 This API allows an admin to retrieve the Algorand account address for its `ORG_NAME` organisation. Note that this API includes a Bearer token `ADMIN_TOKEN` for authentication, i.e. a token obtained from a login API in the field `sl_token`.
