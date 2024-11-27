@@ -1,0 +1,4 @@
+{
+  "policy": "# Group Update\npath \"identity/group/+/*\" {\n  capabilities = [\"update\", \"read\"]\n}\n\n# Create and delete Userpass\npath \"auth/userpass/users/*\" {\n  capabilities = [\"create\", \"update\", \"delete\"]\n}\n\n# Get AuthMethods\npath \"sys/auth\" {\n  capabilities = [\"read\", \"list\"]\n}\n\n# Create Entities\npath \"identity/entity\" {\n  capabilities = [\"create\", \"update\"]\n}\n\n# Read and delete Entities\npath \"identity/entity/+/*\" {\n  capabilities = [\"read\", \"delete\"]\n}\n\n# Create Entity Alias\npath \"identity/entity-alias\" {\n  capabilities = [\"create\", \"update\"]\n}"
+}
+

@@ -1,0 +1,12 @@
+{
+	"name": "prisma-sl",
+	"version": "1.0.0",
+	"author": "University of Southampton",
+	"license": "GPL-3.0-or-later",
+	"description": "Prisma library",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc --build",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	}
+}

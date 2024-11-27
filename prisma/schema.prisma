@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Discovery {
+    /// TAXII Standard
+    id          String  @id
+    title       String
+    description String?
+    contact     String?
+    default     String?
+
+    /// Prisma
+    APIRoot APIRoot[] @relation("APIRoots")
+}
+
+model APIRoot {
+    /// TAXII Standard
+    id                 String   @id
+    title              String
+    description        String?
+    versions           String[]
+    max_content_length Int
+
+    /// Service Ledger
+    domain String
+    slug   String
+
+    /// Prisma
+    discovery   Discovery    @relation("APIRoots", fields: [discoveryId], references: [id])
+    discoveryId String
+    Collection  Collection[]
+    Status      Status[]
+
+    @@unique([domain, slug])
+    @@index([discoveryId])
+}
+
+model Status {
+    /// TAXII Standard
+    id                String       @id @default(uuid())
+    status            StatusStatus @default(pending)
+    request_timestamp DateTime     @default(now())
+    total_count       Int
+
+    /// Prisma
+    apiRoot      APIRoot        @relation(fields: [apiRootId], references: [id])
+    apiRootId    String
+    StatusDetail StatusDetail[] @relation("StatusDetails")
+
+    @@unique([id, apiRootId])
+    @@index([apiRootId])
+}
+
+enum StatusStatus {
+    complete
+    pending
+}
+
+model StatusDetail {
+    /// TAXII Standard
+    id         String   @id @default(uuid())
+    identifier String
+    version    DateTime
+    message    String?
+
+    /// Service Ledger
+    statusDetailStatus StatusDetailStatus @default(pending)
+
+    /// Prisma
+    status   Status @relation("StatusDetails", fields: [statusId], references: [id])
+    statusId String
+
+    @@index([statusId])
+}
+
+enum StatusDetailStatus {
+    success
+    failure
+    pending
+}
+
+model Collection {
+    /// TAXII Standard
+    id          String   @id @default(uuid())
+    title       String
+    description String?
+    alias       String
+    media_types String[]
+    can_read	Boolean
+    can_write	Boolean
+
+    /// Prisma
+    apiRoot    APIRoot      @relation(fields: [apiRootId], references: [id])
+    apiRootId  String
+    STIXObject STIXObject[]
+
+    @@unique([alias, apiRootId])
+    @@unique([id, apiRootId])
+    @@index([apiRootId])
+}
+
+model STIXObject {
+    /// TAXXI Standard
+    id           String   @id @default(uuid())
+    identifier   String
+    type         String
+    version      DateTime
+    spec_version String
+
+    /// Algo
+    public_address String
+    assetId        Int
+
+    /// Prisma
+    collection   Collection @relation(fields: [collectionId], references: [id])
+    collectionId String
+
+    @@index([collectionId])
+}

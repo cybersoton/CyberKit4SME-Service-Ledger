@@ -4,3 +4,24 @@
 docker/compose/**/storage/postgres/
 docker/compose/**/storage/ipfs/
 docker/compose/**/storage/vault/file/
+
+# turbo
+.turbo
+
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# generated javascripts
+apps/**/*.js
+apps/**/*.map
+apps/**/*.d.ts
+packages/**/*.js
+packages/**/*.map
+packages/**/*.d.ts
+!packages/eslint-config-custom/index.js
+
+
+#prisma
+prisma/migrations

@@ -1,0 +1,4 @@
+{
+  "policy": "# Read Entities\npath \"identity/entity/name/*\" {\n  capabilities = [\"read\"]\n}"
+}
+

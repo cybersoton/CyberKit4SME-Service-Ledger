@@ -1,0 +1,11 @@
+{
+	"$schema": "https://json.schemastore.org/nodemon.json",
+	"watch": [
+		"server.ts",
+		"api/**/*",
+		"db/**/*"
+	],
+	"execMap": {
+		"ts": "ts-node -r dotenv/config server.ts"
+	}
+}

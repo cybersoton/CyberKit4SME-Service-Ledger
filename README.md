@@ -4,11 +4,29 @@ The Service Ledger (SL) is a software tool developed for the [CyberKit4SME](http
 
 To deal with CTI data, SL integrates the [STIX and TAXII standards](https://oasis-open.github.io/cti-documentation/). The STIX is a data modelling language for representing CTI data in a structured way. The TAXII is a client-server application protocol for exchanging STIX objects over HTTPS. SL employs the [InterPlanetary File System (IPFS)](https://ipfs.tech/) as decentralised protocol to store data over a peer-to-peer network. IPFS assigns a file with a unique identifier, called _Content Identifier_ (CID), and then cryptographically split the file into smaller chunks distributed on the network nodes. As privacy-preserving property, SL relies on [HashiCorp Vault](https://www.vaultproject.io/) to create and maintain criptographic keys for each participating SME. When a user of an organisation wants to store CTI information, SL retrieves the associated SME's public key and then encrypts any file before sending it to the IPFS network. Once a file is stored on IPFS, SL relies on the [Algorand](https://www.algorand.com/) blockchain to represent its corresponding CID as a _Non-Fungible Token_ (NFT), making it tamper-proof, verifiable and traceable.
 
+This repository is a one package [turborepo](https://turbo.build/repo) and uses [npm](https://www.npmjs.com/) as a package manager. It includes the following apps/packages:
+
+- `apps/sl-taxii`: an [expressJS](https://expressjs.com/) app containing the SL's [TAXII](https://docs.oasis-open.org/cti/taxii/v2.1/os/taxii-v2.1-os.html) server;
+- `apps/sl-auth`: an [expressJS](https://expressjs.com/) app containing the SL's Authentication server, which allows SMEs to register users and login with SL;
+- `packages/algo`: a library to interact with the Algorand testnet, using [js-algorand-sdk](https://github.com/algorand/js-algorand-sdk) library;
+- `packages/ipfs`: a library to interact with the IPFS, using [ipfs-http-client](https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client#readme) library;
+- `packages/prisma-sl`: a library to interact with the [Postgres](https://www.postgresql.org/) database and the ORM [Prisma](https://www.prisma.io/);
+- `packages/redis-session`: a library to interact with the [Redis]([https://www.ipfs.io/) datastore and the [redis-om-node](https://github.com/redis/redis-om-node](https://redis.io/)), which are used as a session token database for user authentication and login;
+- `packages/vault-http`: a library to interact with the Hashicorp Vault datastore (written in-house);
+- `packages/vault-service-sl`: an abstraction of `packages/vault-http` just for what SL needs to communicate with the Hashicorp Vault datastore.
+
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/). Moreover, this turborepo has some additional tools already setup:
+
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+
 ## SL installation
 
 Software requirements:
 
 - Docker and Docker Compose
+- NodeJS 18
+- npm
 
 ### Step 1: Setting up the Algorand network
 

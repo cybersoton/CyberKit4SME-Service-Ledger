@@ -1,0 +1,15 @@
+{
+	"name": "algo",
+	"version": "1.0.0",
+	"author": "University of Southampton",
+	"license": "GPL-3.0-or-later",
+	"description": "Algorand Client",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc --build",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"algosdk": "^1.19.0"
+	}
+}

@@ -1,0 +1,43 @@
+{
+	"name": "service-ledger",
+	"version": "6.7.0",
+	"author": "University of Southampton",
+	"license": "GPL-3.0-or-later",
+	"private": true,
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev --parallel",
+		"dev-ts": "turbo run dev-ts --parallel",
+		"lint": "turbo run lint",
+		"format": "prettier --write \"**/*.{ts,tsx,md}\""
+	},
+	"devDependencies": {
+		"@types/node": "^18.0.6",
+		"eslint-config-custom": "*",
+		"prettier": "latest",
+		"prisma": "^4.1.0",
+		"tsconfig": "*",
+		"turbo": "latest"
+	},
+	"dependencies": {
+		"algo": "*",
+		"ipfs": "*",
+		"prisma-sl": "*",
+		"redis-session": "*",
+		"ts-node": "^10.9.1",
+		"vault-http": "*",
+		"vault-service-sl": "*"
+	},
+	"engines": {
+		"npm": ">=7.0.0",
+		"node": ">= 18.4.0"
+	},
+	"prisma": {
+		"seed": "ts-node prisma/seed.ts"
+	},
+	"packageManager": "npm@8.13.0"
+}

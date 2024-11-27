@@ -1,0 +1,22 @@
+{
+	"name": "sl-taxii",
+	"version": "6.7.0",
+	"author": "University of Southampton",
+	"license": "GPL-3.0-or-later",
+	"description": "TAXII Server",
+	"main": "server.js",
+	"scripts": {
+		"dev": "node -r dotenv/config server.js",
+		"dev-ts": "npx nodemon",
+		"build": "tsc --build",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"threads": "^1.7.0",
+		"moment": "^2.29.4",
+		"uuid": "^8.3.2"
+	},
+	"devDependencies": {
+		"@types/uuid": "^8.3.4"
+	}
+}
